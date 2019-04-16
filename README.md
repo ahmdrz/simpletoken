@@ -1,5 +1,5 @@
 ## Simple Token !
-> Generate HMAC based token so easy with simpletoken.
+> Generating HMAC based token is so easy with `simpletoken`..
 
 #### Installation
 
@@ -19,23 +19,29 @@ import (
 	"github.com/ahmdrz/simpletoken"
 )
 
+type Payload struct {
+	Username  string
+	CreatedAt time.Time
+}
+
 func main() {
 	simpleToken, err := simpletoken.New("md5", []byte("long-long-secret-key"))
 	if err != nil {
 		panic(err)
 	}
 
-	token, err := simpleToken.Generate(map[string]interface{}{
-		"username":   "ahmdrz",
-		"created_at": time.Now(),
-	})
+	myPayload := Payload{
+		Username:  "ahmdrz",
+		CreatedAt: time.Now(),
+	}
+	token, err := simpleToken.Generate(myPayload)
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("token is %s\n", token)
 
-	output := map[string]interface{}{}
+	output := Payload{}
 	err = simpleToken.ParseString(token.String(), &output)
 	if err != nil {
 		panic(err)
